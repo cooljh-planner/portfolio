@@ -1,0 +1,81 @@
+# 로컬 미리보기·빌드 때 생기는 폴더 (올리지 않습니다)
+/_site
+/.jekyll-cache
+/.jekyll-metadata
+/.sass-cache
+/.bundle
+/vendor
+/node_modules
+/Gemfile.lock
+/dist
+/.workflow
+*.gem
+
+# 운영체제가 만드는 파일
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.lnk
+
+# 비밀 정보·개인 파일: 실수로 올리지 않도록 막아 둡니다.
+# (정확한 이름만 적었습니다. 글 제목에 secret 이 들어간 글이나 키노트(.key) 파일까지 무시하지 않도록 좁게 지정함.
+#  이 목록은 보장이 아니라 보조 장치입니다. 비밀 파일은 애초에 이 폴더에 두지 마세요.)
+# (GitHub Pages 는 점(.)이나 _ 로 시작하지 않는 파일을 모두 공개하므로, 이런 파일은 이 폴더에 두지 마세요.)
+.env
+.env.*
+*.pem
+*.p12
+*.p8
+*.pfx
+*.crt
+*.cer
+*.kdbx
+*.ppk
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+credentials.json
+credentials.txt
+client_secret*.json
+service-account*.json
+passwords.txt
+password.txt
+secret.txt
+secrets/
+.netrc
+.ssh/
+
+# 편집기·AI 에이전트·로컬 스크립트 도구 폴더, 백업 파일
+.vscode/
+.idea/
+.claude/
+.cursor/
+.gemini/
+.codex/
+.antigravity/
+.agent/
+__pycache__/
+*.pyc
+.venv/
+*.bak
+*.orig
+*.swp
+*~
+
+# 로컬 내보내기·임시 산출물 (PDF 내보내기, 압축본, 로그 등)
+*.pdf
+*.zip
+*.pptx
+*.log
+*.tmp
+*.temp
+
+# 템플릿 배포용 안내·도구·초안 파일 (실제 포트폴리오 서비스 서빙에 불필요)
+/START-HERE.html
+/docs/
+/tools/
+/_templates/
+/test.md
