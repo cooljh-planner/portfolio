@@ -1,0 +1,14 @@
+{%- comment -%}
+  그림 한 장. 사용법: {% include figure.html src="/assets/..." alt="설명" caption="캡션" %}
+  src 가 http(s):// 로 시작하면 그대로, 사이트 안 경로이면 baseurl 을 붙여서 출력합니다.
+  그 밖의 형식(javascript:, data: 등)은 이미지로 쓰지 않습니다(_includes/safe-url.html).
+{%- endcomment -%}
+{%- include safe-url.html url=include.src kind="media" -%}
+<figure class="figure">
+  {%- if safe_url != '' %}
+  <img src="{{ safe_url | escape }}" alt="{{ include.alt | escape }}" loading="{{ include.loading | default: 'lazy' | escape }}" decoding="async">
+  {%- endif %}
+  {%- if include.caption and include.caption != '' %}
+  <figcaption class="figure__caption">{{ include.caption | escape }}</figcaption>
+  {%- endif %}
+</figure>

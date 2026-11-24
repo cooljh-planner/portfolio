@@ -1,0 +1,192 @@
+{%- comment -%}
+  프로필 영역. 값은 index.md 의 front matter 와 본문에서 가져옵니다.
+  ※ 이름은 title 키에 적습니다. Jekyll 이 page.name 을 '파일 이름'으로 예약해 두었기 때문에 name 키는 쓸 수 없습니다.
+  include.bio = 본문(소개글)이 변환된 HTML
+{%- endcomment -%}
+<section class="wrap profile" aria-labelledby="profile-name">
+  <div class="profile__hero">
+    <div class="profile__avatar">
+      {%- include safe-url.html url=page.avatar kind="media" -%}
+      {%- if safe_url != '' %}
+      <img class="avatar" src="{{ safe_url | escape }}" alt="{{ page.title | escape }} 프로필 사진" width="140" height="140" decoding="async">
+      {%- else %}
+      <span class="avatar avatar--initial" aria-hidden="true">{{ page.title | default: site.title | slice: 0, 1 | escape }}</span>
+      {%- endif %}
+    </div>
+
+    <div class="profile__main">
+      {%- if page.role and page.role != '' %}
+      <p class="profile__role">{{ page.role | escape }}</p>
+      {%- endif %}
+      <h1 class="profile__name" id="profile-name">{{ page.title | default: site.title | escape }}</h1>
+
+      {%- assign profile_site_url = '' -%}
+      {%- if page.site_url and page.site_url != '' -%}
+        {%- include safe-url.html url=page.site_url kind="link" -%}
+        {%- if safe_url_type == 'abs' -%}{%- assign profile_site_url = safe_url -%}{%- endif -%}
+      {%- endif -%}
+
+      {%- assign has_contact = false -%}
+      {%- if page.email and page.email != '' %}{% assign has_contact = true %}{% endif -%}
+      {%- if profile_site_url != '' %}{% assign has_contact = true %}{% endif -%}
+      {%- if page.links and page.links.size > 0 %}{% assign has_contact = true %}{% endif -%}
+
+      {%- if has_contact %}
+      <ul class="profile__contacts" aria-label="연락처 및 링크">
+        {%- if page.email and page.email != '' %}
+        <li><a class="contact-pill" href="mailto:{{ page.email | strip | escape }}"><span class="contact-pill__k">Email</span><span>{{ page.email | escape }}</span></a></li>
+        {%- endif %}
+        {%- if profile_site_url != '' %}
+          {%- assign site_url_label = profile_site_url | remove: 'https://' | remove: 'http://' -%}
+          {%- assign site_url_last = site_url_label | slice: -1, 1 -%}
+          {%- if site_url_last == '/' -%}{%- assign site_url_len = site_url_label.size | minus: 1 -%}{%- assign site_url_label = site_url_label | slice: 0, site_url_len -%}{%- endif -%}
+        <li><a class="contact-pill" href="{{ profile_site_url | escape }}" target="_blank" rel="noopener"><span class="contact-pill__k">Web</span><span>{{ site_url_label | escape }}</span></a></li>
+        {%- endif %}
+        {%- for item in page.links %}
+          {%- if item.url %}
+            {%- include safe-url.html url=item.url kind="link" -%}
+            {%- if safe_url != '' %}
+        <li><a class="contact-pill" href="{{ safe_url | escape }}" rel="noopener"><span>{{ item.label | default: item.url | escape }}</span></a></li>
+            {%- else %}
+        <li><span class="contact-pill"><span>{{ item.label | default: item.url | escape }}</span></span></li>
+            {%- endif %}
+          {%- endif %}
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+
+      {%- assign bio_html = include.bio | strip -%}
+      {%- if bio_html != '' %}
+      <div class="profile__bio prose">
+        {{ bio_html }}
+      </div>
+      {%- endif %}
+    </div>
+  </div>
+
+  {%- if page.metrics and page.metrics.size > 0 %}
+  <div class="profile__metrics" aria-label="핵심 지표">
+    {%- for m in page.metrics %}
+    <div class="metric-card">
+      <p class="metric-card__value">
+        <span class="metric-card__num">{{ m.value | escape }}</span><span class="metric-card__unit">{{ m.unit | escape }}</span>
+      </p>
+      <p class="metric-card__label">{{ m.label | escape }}</p>
+      {%- if m.sub and m.sub != '' %}
+      <p class="metric-card__sub">{{ m.sub | escape }}</p>
+      {%- endif %}
+    </div>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+
+  {%- if page.careers and page.careers.size > 0 %}
+  <div class="profile__block">
+    <div class="block-head">
+      <h2 class="block-head__title">경력 요약</h2>
+      <span class="block-head__meta">총 11년 · 2015.05 – 현재</span>
+    </div>
+    <div class="career-list">
+      {%- for c in page.careers %}
+      <article class="career-card">
+        <div class="career-card__aside">
+          <p class="career-card__period">
+            <span>{{ c.period | escape }}</span>
+            {%- if c.duration and c.duration != '' %}
+            <span class="career-card__dur">{{ c.duration | escape }}</span>
+            {%- endif %}
+          </p>
+          <h3 class="career-card__company">{{ c.company | escape }}</h3>
+          <p class="career-card__role">{{ c.role | escape }}</p>
+        </div>
+        <div class="career-card__body">
+          {%- if c.keywords and c.keywords.size > 0 %}
+          <ul class="tags career-card__tags">
+            {%- for kw in c.keywords %}
+            <li class="tag tag--accent">{{ kw | escape }}</li>
+            {%- endfor %}
+          </ul>
+          {%- endif %}
+          {%- if c.highlights and c.highlights.size > 0 %}
+          <ul class="career-card__points">
+            {%- for h in c.highlights %}
+            <li>{{ h | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+            {%- endfor %}
+          </ul>
+          {%- endif %}
+        </div>
+      </article>
+      {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+
+  {%- if page.skill_groups or page.education or page.credentials %}
+  <div class="profile__grid-2col">
+    {%- if page.skill_groups and page.skill_groups.size > 0 %}
+    <div class="profile__box">
+      <div class="block-head">
+        <h2 class="block-head__title">보유 스킬</h2>
+        <span class="block-head__meta">{{ page.skill_groups.size }}개 핵심 역량 영역</span>
+      </div>
+      <div class="skill-groups">
+        {%- for grp in page.skill_groups %}
+        <div class="skill-group">
+          <h3 class="skill-group__title">{{ grp.name | escape }}</h3>
+          <ul class="tags">
+            {%- for item in grp.items %}
+            <li class="tag">{{ item | escape }}</li>
+            {%- endfor %}
+          </ul>
+        </div>
+        {%- endfor %}
+      </div>
+    </div>
+    {%- elsif page.skills and page.skills.size > 0 %}
+    <div class="profile__box">
+      <div class="block-head">
+        <h2 class="block-head__title">보유 스킬</h2>
+      </div>
+      <ul class="tags">
+        {%- for skill in page.skills %}
+        <li class="tag">{{ skill | escape }}</li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endif %}
+
+    {%- if page.education or page.credentials %}
+    <div class="profile__box">
+      <div class="block-head">
+        <h2 class="block-head__title">학력 · 자격 · 수상</h2>
+        <span class="block-head__meta">학업 · 인증 · 수상 이력</span>
+      </div>
+      <ul class="timeline-compact">
+        {%- for edu in page.education %}
+        <li class="timeline-compact__item">
+          <span class="timeline-compact__badge timeline-compact__badge--edu">{{ edu.period | escape }}</span>
+          <div class="timeline-compact__content">
+            <strong>{{ edu.title | escape }}</strong>
+            {%- if edu.detail and edu.detail != '' %}
+            <span>{{ edu.detail | escape }}</span>
+            {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+        {%- for cr in page.credentials %}
+        <li class="timeline-compact__item">
+          <span class="timeline-compact__badge">{{ cr.badge | escape }}</span>
+          <div class="timeline-compact__content">
+            <strong>{{ cr.title | escape }}</strong>
+            {%- if cr.detail and cr.detail != '' %}
+            <span>{{ cr.detail | escape }}</span>
+            {%- endif %}
+          </div>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endif %}
+  </div>
+  {%- endif %}
+</section>

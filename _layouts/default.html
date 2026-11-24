@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'ko' | escape }}">
+{%- include head.html %}
+<body class="layout-{{ page.layout }}">
+  <a class="skip-link no-print" href="#main">본문으로 건너뛰기</a>
+  {%- include header.html %}
+  <main id="main" class="site-main" tabindex="-1">
+    {{ content }}
+  </main>
+  {%- include footer.html %}
+  {%- if page.layout == 'home' or page.layout == 'archive' %}
+  <script src="{{ '/assets/js/posts-filter.js' | relative_url }}" defer></script>
+  {%- endif %}
+</body>
+</html>

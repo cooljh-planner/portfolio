@@ -1,0 +1,149 @@
+---
+layout: slides
+title: 슬라이드 PDF
+permalink: /slides/
+---
+{%- comment -%}
+  슬라이드 PDF 페이지 (/slides/).
+  이 파일은 '재료'만 출력합니다. 프로필과 모든 글의 제목·정보·이미지·본문을 <template> 안에 넣어 두면
+  assets/js/slides.js 가 브라우저에서 16:9 슬라이드로 배치하고 PDF 로 저장합니다.
+  - 전체 덱:  /slides/
+  - 글 하나:  /slides/?post=<글 주소(page.url)>   (글 페이지의 '슬라이드 PDF' 버튼이 만들어 줍니다)
+  글 순서는 메인 목록과 같습니다(대표글 먼저, 그 안에서 최신순 → 나머지 최신순).
+{%- endcomment -%}
+{%- assign known_types = "image-top,image-left,image-right,gallery,text-only" | split: "," -%}
+{%- capture src_prefix %}src="{{ '/assets/' | relative_url }}{% endcapture -%}
+{%- capture href_prefix %}href="{{ '/assets/' | relative_url }}{% endcapture -%}
+{%- capture post_prefix %}href="{{ '/posts/' | relative_url }}{% endcapture -%}
+
+{%- comment -%} ---------- 프로필 (index.md) ---------- {%- endcomment -%}
+{%- assign home = site.pages | where: "layout", "home" | first -%}
+{%- assign bio = '' -%}
+{%- if home -%}
+  {%- assign bio = home.content -%}
+  {%- comment -%}
+    보통은 index.md 가 이 페이지보다 먼저 변환되어 home.content 가 HTML 입니다.
+    아직 변환 전(마크다운 원문)이면 안내용 주석 블록을 걷어내고 직접 변환합니다.
+  {%- endcomment -%}
+  {%- if bio contains '{%' -%}
+    {%- capture end_comment %}endcomment {% raw %}%}{% endraw %}{% endcapture -%}
+    {%- assign bio = bio | split: end_comment | last | markdownify -%}
+  {%- endif -%}
+  {%- if bio != '' -%}
+    {%- unless bio contains '<p>' -%}
+      {%- assign bio = bio | markdownify -%}
+    {%- endunless -%}
+  {%- endif -%}
+  {%- assign bio = bio | replace: 'src="/assets/', src_prefix | replace: 'href="/assets/', href_prefix | replace: 'href="/posts/', post_prefix | strip -%}
+{%- endif -%}
+{%- assign profile_name = home.title | default: site.title -%}
+{%- include pdf-count.html -%}
+
+<div id="slide-src" hidden>
+  <div data-src="site"
+       data-site-title="{{ site.title | escape }}"
+       data-home="{{ '/' | relative_url }}"
+       data-post-count="{{ pdf_post_count }}">
+    <template data-part="excluded">
+      {%- for p in site.posts -%}
+        {%- include post-data.html post=p -%}
+        {%- unless post_pdf -%}
+      <li data-key="{{ p.url | escape }}" data-title="{{ post_title | escape }}"></li>
+        {%- endunless -%}
+      {%- endfor -%}
+    </template>
+  </div>
+
+  {%- assign resolved_site_url = '' -%}
+  {%- if home and home.site_url and home.site_url != '' -%}
+    {%- include safe-url.html url=home.site_url kind="link" -%}
+    {%- if safe_url_type == 'abs' -%}{%- assign resolved_site_url = safe_url -%}{%- endif -%}
+  {%- endif -%}
+  {%- if resolved_site_url == '' and site.url and site.url != '' -%}
+    {%- unless site.url contains 'localhost' or site.url contains '127.0.0.1' -%}
+      {%- assign site_fallback = site.url | append: site.baseurl -%}
+      {%- include safe-url.html url=site_fallback kind="link" -%}
+      {%- if safe_url_type == 'abs' -%}{%- assign resolved_site_url = safe_url -%}{%- endif -%}
+    {%- endunless -%}
+  {%- endif -%}
+  <div data-src="profile"
+       data-name="{{ profile_name | escape }}"
+       data-role="{{ home.role | escape }}"
+       {%- comment -%} 주소 규칙은 사이트와 같음: http(s):// 또는 사이트 안 경로만 (_includes/safe-url.html) {%- endcomment -%}
+       {%- include safe-url.html url=home.avatar kind="media" -%}
+       {%- if safe_url != '' %}
+       data-avatar="{{ safe_url | escape }}"
+       {%- endif %}
+       data-email="{{ home.email | escape }}"
+       data-site-url="{{ resolved_site_url | escape }}">
+    <template data-part="bio">{{ bio }}</template>
+    <template data-part="skills">
+      {%- for skill in home.skills %}<li>{{ skill | escape }}</li>{% endfor -%}
+    </template>
+    <template data-part="links">
+      {%- comment -%} 슬라이드에서는 링크를 글자로만 보여 주므로 주소는 data-url 에 글자로만 담습니다 {%- endcomment -%}
+      {%- for item in home.links %}{% if item.url %}{%- include safe-url.html url=item.url kind="link" -%}{% if safe_url != '' %}<li><a data-url="{{ safe_url | escape }}">{{ item.label | default: item.url | escape }}</a></li>{% endif %}{% endif %}{% endfor -%}
+    </template>
+  </div>
+
+  {%- comment -%} ---------- 글 (메인 목록과 같은 순서) ---------- {%- endcomment -%}
+  {%- for pass in (1..2) -%}
+  {%- for p in site.posts -%}
+    {%- assign is_pinned = false -%}
+    {%- if p.pinned == true or p.pinned == 'true' -%}{%- assign is_pinned = true -%}{%- endif -%}
+    {%- if pass == 1 and is_pinned == false -%}{%- continue -%}{%- endif -%}
+    {%- if pass == 2 and is_pinned -%}{%- continue -%}{%- endif -%}
+
+    {%- include post-data.html post=p -%}
+    {%- unless post_pdf -%}{%- continue -%}{%- endunless -%}
+
+    {%- comment -%} layout_type 판정 (post.html 과 같은 규칙) {%- endcomment -%}
+    {%- assign type = p.layout_type | downcase | strip -%}
+    {%- unless known_types contains type -%}{%- assign type = site.default_layout_type | downcase | strip -%}{%- endunless -%}
+    {%- unless known_types contains type -%}{%- assign type = "image-top" -%}{%- endunless -%}
+
+    {%- capture body_html %}{{ p.content | replace: 'src="/assets/', src_prefix | replace: 'href="/assets/', href_prefix | replace: 'href="/posts/', post_prefix }}{% endcapture -%}
+  <article data-src="post"
+           data-key="{{ p.url | escape }}"
+           data-type="{{ type }}"
+           data-category="{{ post_category | escape }}"
+           data-title="{{ post_title | escape }}"
+           data-date="{{ post_date_text | escape }}"
+           {%- if is_pinned %} data-pinned="true"{% endif %}>
+    <template data-part="meta">
+      <li><span data-k>작성일</span><span data-v>{{ post_date_text | escape }}</span></li>
+      {%- if p.period and p.period != '' %}<li><span data-k>기간</span><span data-v>{{ p.period | escape }}</span></li>{% endif %}
+      {%- if p.role and p.role != '' %}<li><span data-k>역할</span><span data-v>{{ p.role | escape }}</span></li>{% endif %}
+      {%- if p.link and p.link != '' %}{%- include safe-url.html url=p.link kind="link" -%}<li{% if safe_url_type == 'abs' or safe_url_type == 'mailto' %} data-href="{{ safe_url | escape }}"{% endif %}><span data-k>관련 링크</span><span data-v>{{ p.link | strip | remove: 'https://' | remove: 'http://' | escape }}</span></li>{% endif %}
+    </template>
+    <template data-part="tags">
+      {%- for tag in p.tags %}<li>{{ tag | escape }}</li>{% endfor -%}
+    </template>
+    <template data-part="summary">{{ p.summary | escape }}</template>
+    <template data-part="media">
+      {%- comment -%} 대표 이미지(들). text-only 는 이미지를 쓰지 않습니다 {%- endcomment -%}
+      {%- if type == 'gallery' -%}
+        {%- if p.images and p.images.size > 0 -%}
+          {%- for item in p.images -%}
+            {%- if item.src -%}
+              {%- assign g_src = item.src -%}{%- assign g_alt = item.alt | default: post_title -%}{%- assign g_cap = item.caption | default: '' -%}
+            {%- else -%}
+              {%- assign g_src = item -%}{%- capture g_alt %}{{ post_title }} - 이미지 {{ forloop.index }}{% endcapture -%}{%- assign g_cap = '' -%}
+            {%- endif -%}
+            {%- include safe-url.html url=g_src kind="media" %}
+      <img src="{{ safe_url | escape }}" alt="{{ g_alt | escape }}" data-caption="{{ g_cap | escape }}">
+          {%- endfor -%}
+        {%- elsif p.image and p.image != '' -%}
+          {%- include safe-url.html url=p.image kind="media" %}
+      <img src="{{ safe_url | escape }}" alt="{{ p.image_alt | default: post_title | escape }}" data-caption="{{ p.image_caption | escape }}">
+        {%- endif -%}
+      {%- elsif type != 'text-only' and p.image and p.image != '' -%}
+        {%- include safe-url.html url=p.image kind="media" %}
+      <img src="{{ safe_url | escape }}" alt="{{ p.image_alt | default: post_title | escape }}" data-caption="{{ p.image_caption | escape }}">
+      {%- endif %}
+    </template>
+    <template data-part="body">{{ body_html }}</template>
+  </article>
+  {%- endfor -%}
+  {%- endfor %}
+</div>

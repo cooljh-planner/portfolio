@@ -1,0 +1,139 @@
+---
+layout: default
+---
+{%- comment -%}
+  하위 페이지(글). 마크업은 한 벌이고, 모양은 front matter 의 layout_type 이 CSS 클래스(post--유형)로 결정합니다.
+  layout_type 이 없거나 오타이면 → _config.yml 의 default_layout_type → image-top 순서로 대체합니다.
+{%- endcomment -%}
+{%- assign known_types = "image-top,image-left,image-right,gallery,text-only" | split: "," -%}
+{%- assign type = page.layout_type | downcase | strip -%}
+{%- unless known_types contains type -%}
+  {%- assign type = site.default_layout_type | downcase | strip -%}
+{%- endunless -%}
+{%- unless known_types contains type -%}
+  {%- assign type = "image-top" -%}
+{%- endunless -%}
+
+{%- comment -%} 표시용 제목·날짜 (front matter 오류로 title 이 비었을 때도 빈 제목이 나오지 않게 함) {%- endcomment -%}
+{%- include post-data.html post=page -%}
+{%- assign this_title = post_title -%}
+{%- assign this_date_text = post_date_text -%}
+{%- assign this_date_iso = post_date_iso -%}
+
+{%- comment -%} 미디어(이미지) 유무 판정 {%- endcomment -%}
+{%- assign has_media = false -%}
+{%- assign has_gallery = false -%}
+{%- if type == 'gallery' -%}
+  {%- if page.images and page.images.size > 0 -%}
+    {%- assign has_media = true -%}
+    {%- assign has_gallery = true -%}
+  {%- elsif page.image and page.image != '' -%}
+    {%- assign has_media = true -%}
+  {%- endif -%}
+{%- elsif type != 'text-only' -%}
+  {%- if page.image and page.image != '' -%}
+    {%- assign has_media = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} 본문 속 /assets/ , /posts/ 로 시작하는 경로에 baseurl 을 붙입니다 (프로젝트 사이트 대응) {%- endcomment -%}
+{%- capture src_prefix %}src="{{ '/assets/' | relative_url }}{% endcapture -%}
+{%- capture href_prefix %}href="{{ '/assets/' | relative_url }}{% endcapture -%}
+{%- capture post_prefix %}href="{{ '/posts/' | relative_url }}{% endcapture -%}
+{%- assign body_html = content | replace: 'src="/assets/', src_prefix | replace: 'href="/assets/', href_prefix | replace: 'href="/posts/', post_prefix -%}
+
+<article class="wrap post post--{{ type }}{% unless has_media %} post--no-media{% endunless %}">
+  <header class="post__header">
+    <p class="post__kicker">
+      <a class="cat-pill" href="{{ '/archive/' | relative_url }}?category={{ post_category | url_encode }}">{{ post_category | escape }}</a>
+    </p>
+    <h1 class="post__title">{{ this_title | escape }}</h1>
+
+    <dl class="meta">
+      <div class="meta__item">
+        <dt>작성일</dt>
+        <dd><time datetime="{{ this_date_iso | escape }}">{{ this_date_text | escape }}</time></dd>
+      </div>
+      {%- if page.period and page.period != '' %}
+      <div class="meta__item"><dt>기간</dt><dd>{{ page.period | escape }}</dd></div>
+      {%- endif %}
+      {%- if page.role and page.role != '' %}
+      <div class="meta__item"><dt>역할</dt><dd>{{ page.role | escape }}</dd></div>
+      {%- endif %}
+      {%- if page.link and page.link != '' %}
+        {%- comment -%} http(s):// · mailto: · 사이트 안 경로만 링크로, 그 밖의 형식은 글자로만 표시 {%- endcomment -%}
+        {%- include safe-url.html url=page.link kind="link" -%}
+        {%- assign link_text = page.link | strip | remove: 'https://' | remove: 'http://' | truncate: 42  %}
+      <div class="meta__item"><dt>관련 링크</dt><dd>{% if safe_url != '' %}<a href="{{ safe_url | escape }}" rel="noopener">{{ link_text | escape }}</a>{% else %}{{ link_text | escape }}{% endif %}</dd></div>
+      {%- endif %}
+    </dl>
+
+    {%- if page.tags and page.tags.size > 0 %}
+    <ul class="tags post__tags">
+      {%- for tag in page.tags %}
+      <li class="tag">{{ tag | escape }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+
+    {%- comment -%} 이 글만 16:9 슬라이드로 보고 PDF 로 저장하는 페이지로 이동 (pdf != false 이고 자바스크립트가 켜져 있을 때만 표시) {%- endcomment %}
+    {%- if post_pdf %}
+    <p class="post__actions no-print js-only">
+      <a class="btn btn--ghost" href="{{ '/slides/' | relative_url }}?post={{ page.url | url_encode }}">슬라이드 PDF</a>
+    </p>
+    {%- endif %}
+  </header>
+
+  <div class="post__layout">
+    {%- if has_media %}
+    <div class="post__media">
+      {%- if has_gallery %}
+      <ul class="gallery">
+        {%- for item in page.images %}
+          {%- if item.src %}
+            {%- assign g_src = item.src %}
+            {%- assign g_alt = item.alt | default: this_title %}
+            {%- assign g_cap = item.caption | default: '' %}
+          {%- else %}
+            {%- assign g_src = item %}
+            {%- capture g_alt %}{{ this_title }} - 이미지 {{ forloop.index }}{% endcapture %}
+            {%- assign g_cap = '' %}
+          {%- endif %}
+        <li class="gallery__item">
+          {%- include figure.html src=g_src alt=g_alt caption=g_cap %}
+        </li>
+        {%- endfor %}
+      </ul>
+      {%- else %}
+        {%- assign m_alt = page.image_alt | default: this_title %}
+        {%- include figure.html src=page.image alt=m_alt caption=page.image_caption loading="eager" %}
+      {%- endif %}
+    </div>
+    {%- endif %}
+
+    <div class="post__body prose">
+      {{ body_html }}
+    </div>
+  </div>
+
+  <nav class="post__nav no-print" aria-label="글 이동">
+    {%- if page.previous %}
+      {%- include post-data.html post=page.previous %}
+    <a class="post__nav-link post__nav-link--prev" href="{{ page.previous.url | relative_url }}" rel="prev">
+      <span class="post__nav-label">← 이전 글</span>
+      <span class="post__nav-title">{{ post_title | escape }}</span>
+    </a>
+    {%- else %}<span></span>{% endif %}
+    <a class="post__nav-link post__nav-link--list" href="{{ '/archive/' | relative_url }}">
+      <span class="post__nav-label">전체</span>
+      <span class="post__nav-title">목록</span>
+    </a>
+    {%- if page.next %}
+      {%- include post-data.html post=page.next %}
+    <a class="post__nav-link post__nav-link--next" href="{{ page.next.url | relative_url }}" rel="next">
+      <span class="post__nav-label">다음 글 →</span>
+      <span class="post__nav-title">{{ post_title | escape }}</span>
+    </a>
+    {%- else %}<span></span>{% endif %}
+  </nav>
+</article>

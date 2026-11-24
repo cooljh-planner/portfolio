@@ -1,0 +1,13 @@
+{%- include pdf-count.html -%}
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+    <nav class="site-nav no-print" aria-label="주요 메뉴">
+      <a class="site-nav__link" href="{{ '/' | relative_url }}"{% if page.layout == 'home' %} aria-current="page"{% endif %}>소개</a>
+      <a class="site-nav__link" href="{{ '/archive/' | relative_url }}"{% if page.layout == 'archive' or page.layout == 'post' %} aria-current="page"{% endif %}>글 목록</a>
+      {%- if pdf_post_count > 0 %}
+      <a class="site-nav__link site-nav__link--pdf js-only" href="{{ '/slides/' | relative_url }}">슬라이드 PDF</a>
+      {%- endif %}
+    </nav>
+  </div>
+</header>
