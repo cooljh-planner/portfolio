@@ -1,0 +1,5 @@
+---
+layout: default
+---
+{%- assign arch_title = page.title | default: "글 목록" -%}
+{% include post-browser.html title=arch_title description=page.description default_view="list" show_archive_link=false section_id="posts" heading_level="h1" %}

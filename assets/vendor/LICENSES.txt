@@ -1,0 +1,555 @@
+assets/vendor/  -  슬라이드 PDF 기능이 쓰는 외부 라이브러리 (원본 그대로 포함)
+==========================================================================
+이 폴더의 파일은 /slides/ 페이지에서만 불러옵니다. 실행 중에 인터넷(CDN)에서 받아 오지 않습니다.
+아래 두 파일은 npm 레지스트리의 공개 배포본(tarball)에서 꺼낸 파일을 한 글자도 바꾸지 않은 것입니다.
+받은 tarball 은 레지스트리가 알려 준 dist.integrity(sha512) 와 일치함을 확인했습니다 (2026-11-19).
+업데이트할 때는 같은 방법으로 새 버전을 받아 파일을 바꾸고, 아래 버전과 sha256 을 고쳐 주세요.
+
+--------------------------------------------------------------------------
+1) html2canvas-pro.min.js
+   - 패키지 / 버전 : html2canvas-pro 2.5.2  (npm 배포일 2026-10-07)
+   - 원본 경로     : package/dist/html2canvas-pro.min.js
+   - 라이선스      : MIT
+   - 출처          : https://www.npmjs.com/package/html2canvas-pro
+                     https://github.com/yorickshan/html2canvas-pro
+   - tarball       : https://registry.npmjs.org/html2canvas-pro/-/html2canvas-pro-2.5.2.tgz
+   - integrity     : sha512-uka+0oVG/yB4B7U9M/+aJFF0aKZVmMWZKi4unemkQh537cLu3jXPvZtXakTuPl3taOI+O43RhuV6kn2igk1Z6g==
+   - sha256 (파일) : 40d4eb47f774247870916129662e17ef0b956c9c39a3e46a0d91f55252264139
+   - 용도          : 슬라이드(HTML)를 그림(canvas)으로 그립니다.
+                     원래의 html2canvas 1.4.1(2022년 이후 업데이트 없음)은 이 슬라이드에서 글자의 세로 위치가
+                     어긋나게 그려져서, 유지보수되는 갈래(fork)인 html2canvas-pro 를 씁니다.
+   - 버전 고르는 기준 : 남이 배포할 템플릿에 들어가므로, 막 나온 배포본은 쓰지 않고 npm 배포일로부터
+                     30일 이상 지난 것 중 가장 새 버전을 씁니다(문제 있는 배포가 알려질 시간을 둠).
+                     2026-11-19 기준 최신은 2.6.4(2026-11-11 배포)였고, 30일 기준을 만족하는 가장 새 버전이 2.5.2 입니다.
+                     2.5.2 로 슬라이드가 2.6.4 와 같게 그려지는 것을 Chromium·Firefox·WebKit 에서 확인했습니다.
+
+2) jspdf.umd.min.js
+   - 패키지 / 버전 : jspdf 4.2.1  (npm 배포일 2026-03-17)
+   - 원본 경로     : package/dist/jspdf.umd.min.js
+   - 라이선스      : MIT (파일 머리의 @license 주석에 포함된 하위 구성요소의 저작권 표시도 그대로 둡니다)
+   - 출처          : https://www.npmjs.com/package/jspdf
+                     https://github.com/parallax/jsPDF
+   - tarball       : https://registry.npmjs.org/jspdf/-/jspdf-4.2.1.tgz
+   - integrity     : sha512-YyAXyvnmjTbR4bHQRLzex3CuINCDlQnBqoSYyjJwTP2x9jDLuKDzy7aKUl0hgx3uhcl7xzg32agn5vlie6HIlQ==
+   - sha256 (파일) : e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54
+   - 용도          : 슬라이드 그림을 16:9 쪽(960×540pt)으로 모아 PDF 파일을 만듭니다.
+   - 참고          : 파일 끝의 sourceMappingURL 주석은 원본 그대로 두었습니다(.map 파일은 포함하지 않음).
+                     개발자 도구를 열었을 때만 .map 을 찾으며, 페이지 동작에는 영향이 없습니다.
+
+==========================================================================
+라이선스 전문
+==========================================================================
+
+[html2canvas-pro]
+MIT License
+
+Copyright (c) 2024-present yorickshan and html2canvas-pro contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+[jspdf]
+Copyright
+(c) 2010-2025 James Hall, https://github.com/MrRio/jsPDF
+(c) 2015-2025 yWorks GmbH, https://www.yworks.com/
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+==========================================================================
+함께 들어 있는 구성요소의 저작권 표시 (아래 원문은 모두 npm 배포본에서 그대로 옮겼습니다)
+==========================================================================
+
+[A] html2canvas-pro 는 niklasvh/html2canvas 에서 갈라져 나온 프로그램입니다.
+    원본 html2canvas 의 MIT 저작권 표시 (출처: npm html2canvas 1.4.1 tarball 의 package/LICENSE,
+    https://registry.npmjs.org/html2canvas/-/html2canvas-1.4.1.tgz, integrity 확인함)
+
+Copyright (c) 2012 Niklas von Hertzen
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+[B] jspdf.umd.min.js 안에 함께 묶여 들어 있는 주요 구성요소
+    - pako 2.1.0 (zlib 압축)          : 라이선스 (MIT AND Zlib)
+    - Adobe JPEG 인코더               : BSD-3-Clause (Copyright (c) 2008, Adobe Systems Incorporated)
+    - Joseph Myers 의 md5 코드         : 원작자가 특정 라이선스를 지정하지 않았다고 명시되어 있음 (Owen Leong 수정)
+    - 그 밖에 FPDF 유래 코드(제한 없는 허용 라이선스), 여러 기여자의 MIT 표시, omggif 등
+    이 표시들은 jspdf.umd.min.js 파일 안의 주석으로도 그대로 남아 있습니다. 파일의 주석 전문은 [D] 에 옮겨 두었습니다.
+
+[C] pako 2.1.0 의 라이선스 원문
+    (출처: https://registry.npmjs.org/pako/-/pako-2.1.0.tgz, integrity 확인함)
+    - package/LICENSE (MIT):
+
+(The MIT License)
+
+Copyright (C) 2014-2017 by Vitaly Puzrin and Andrei Tuputcyn
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+    - zlib 이식 부분의 Zlib 라이선스 (package/lib/zlib/deflate.js 머리말):
+
+(C) 1995-2013 Jean-loup Gailly and Mark Adler
+(C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+
+[D] jspdf.umd.min.js 안의 저작권·라이선스 주석 전문 (파일에 들어 있는 순서대로, 28개)
+
+/** @license
+ *
+ * jsPDF - PDF Document creation from JavaScript
+ * Version 4.2.1 Built on 2026-03-17T11:11:27.056Z
+ *                      CommitID 00000000
+ *
+ * Copyright (c) 2010-2025 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
+ *               2015-2025 yWorks GmbH, http://www.yworks.com
+ *               2015-2025 Lukas Holländer <lukas.hollaender@yworks.com>, https://github.com/HackbrettXXX
+ *               2016-2018 Aras Abbasi <aras.abbasi@gmail.com>
+ *               2010 Aaron Spike, https://github.com/acspike
+ *               2012 Willow Systems Corporation, https://github.com/willowsystems
+ *               2012 Pablo Hess, https://github.com/pablohess
+ *               2012 Florian Jenett, https://github.com/fjenett
+ *               2013 Warren Weckesser, https://github.com/warrenweckesser
+ *               2013 Youssef Beddad, https://github.com/lifof
+ *               2013 Lee Driscoll, https://github.com/lsdriscoll
+ *               2013 Stefan Slonevskiy, https://github.com/stefslon
+ *               2013 Jeremy Morel, https://github.com/jmorel
+ *               2013 Christoph Hartmann, https://github.com/chris-rock
+ *               2014 Juan Pablo Gaviria, https://github.com/juanpgaviria
+ *               2014 James Makes, https://github.com/dollaruw
+ *               2014 Diego Casorran, https://github.com/diegocr
+ *               2014 Steven Spungin, https://github.com/Flamenco
+ *               2014 Kenneth Glassey, https://github.com/Gavvers
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Contributor(s):
+ *    siefkenj, ahwolf, rickygu, Midnith, saintclair, eaparango,
+ *    kim3er, mfo, alnorth, Flamenco
+ */
+
+/**
+   * A class to parse color values
+   * @author Stoyan Stefanov <sstoo@gmail.com>
+   * {@link   http://www.phpied.com/rgb-color-parser-in-javascript/}
+   * @license Use it if you like it
+   */
+
+/**
+   * @license
+   * Joseph Myers does not specify a particular license for his work.
+   *
+   * Author: Joseph Myers
+   * Accessed from: http://www.myersdaily.org/joseph/javascript/md5.js
+   *
+   * Modified by: Owen Leong
+   */
+
+/**
+   * @license
+   * FPDF is released under a permissive license: there is no usage restriction.
+   * You may embed it freely in your application (commercial or not), with or
+   * without modifications.
+   *
+   * Reference: http://www.fpdf.org/en/script/script37.php
+   */
+
+/**
+   * @license
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   * Author: Owen Leong (@owenl131)
+   * Date: 15 Oct 2020
+   * References:
+   * https://www.cs.cmu.edu/~dst/Adobe/Gallery/anon21jul01-pdf-encryption.txt
+   * https://github.com/foliojs/pdfkit/blob/master/lib/security.js
+   * http://www.fpdf.org/en/script/script37.php
+   */
+
+/**
+   * @license
+   * Copyright (c) 2014 Steven Spungin (TwelveTone LLC)  steven@twelvetone.tv
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * Copyright (c) 2017 Aras Abbasi
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/** @license
+   * jsPDF Autoprint Plugin
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * Copyright (c) 2014 Steven Spungin (TwelveTone LLC)  steven@twelvetone.tv
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * jsPDF filters PlugIn
+   * Copyright (c) 2014 Aras Abbasi
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * jsPDF fileloading PlugIn
+   * Copyright (c) 2018 Aras Abbasi (aras.abbasi@gmail.com)
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * ====================================================================
+   * Copyright (c) 2013 Youssef Beddad, youssef.beddad@gmail.com
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining
+   * a copy of this software and associated documentation files (the
+   * "Software"), to deal in the Software without restriction, including
+   * without limitation the rights to use, copy, modify, merge, publish,
+   * distribute, sublicense, and/or sell copies of the Software, and to
+   * permit persons to whom the Software is furnished to do so, subject to
+   * the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be
+   * included in all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+   * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+   * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+   * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   * ====================================================================
+   */
+
+/**
+   * @license
+   * Copyright (c) 2014 Steven Spungin (TwelveTone LLC)  steven@twelvetone.tv
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/*! pako 2.1.0 https://github.com/nodeca/pako @license (MIT AND Zlib) */
+
+/**
+   * @license
+   * (c) Dean McNamee <dean@gmail.com>, 2013.
+   *
+   * https://github.com/deanm/omggif
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a copy
+   * of this software and associated documentation files (the "Software"), to
+   * deal in the Software without restriction, including without limitation the
+   * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+   * sell copies of the Software, and to permit persons to whom the Software is
+   * furnished to do so, subject to the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be included in
+   * all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   * IN THE SOFTWARE.
+   *
+   * omggif is a JavaScript implementation of a GIF 89a encoder and decoder,
+   * including animation and compression.  It does not rely on any specific
+   * underlying system, so should run in the browser, Node, or Plask.
+   */
+
+/**
+   * @license
+    Copyright (c) 2008, Adobe Systems Incorporated
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without 
+    modification, are permitted provided that the following conditions are
+    met:
+
+    * Redistributions of source code must retain the above copyright notice, 
+      this list of conditions and the following disclaimer.
+    
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the 
+      documentation and/or other materials provided with the distribution.
+    
+    * Neither the name of Adobe Systems Incorporated nor the names of its 
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+    IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+    CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+    PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+
+/**
+   * @license
+   * Copyright (c) 2017 Aras Abbasi
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/** @license
+     * Copyright (c) 2017 Dominik Homberger
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    https://webpjs.appspot.com
+    WebPRiffParser dominikhlbg@gmail.com
+    */
+
+/** ====================================================================
+   * @license
+   * jsPDF XMP metadata plugin
+   * Copyright (c) 2016 Jussi Utunen, u-jussi@suomi24.fi
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining
+   * a copy of this software and associated documentation files (the
+   * "Software"), to deal in the Software without restriction, including
+   * without limitation the rights to use, copy, modify, merge, publish,
+   * distribute, sublicense, and/or sell copies of the Software, and to
+   * permit persons to whom the Software is furnished to do so, subject to
+   * the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be
+   * included in all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+   * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+   * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+   * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   * ====================================================================
+   */
+
+/**
+   * @license
+   * Copyright (c) 2018 Aras Abbasi
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * Copyright (c) 2019 Aras Abbasi
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   *
+   * Copyright (c) 2021 Antti Palola, https://github.com/Pantura
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining
+   * a copy of this software and associated documentation files (the
+   * "Software"), to deal in the Software without restriction, including
+   * without limitation the rights to use, copy, modify, merge, publish,
+   * distribute, sublicense, and/or sell copies of the Software, and to
+   * permit persons to whom the Software is furnished to do so, subject to
+   * the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be
+   * included in all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+   * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+   * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+   * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   * ====================================================================
+   */
+
+/**
+   * @license
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * ====================================================================
+   * Copyright (c) 2013 Eduardo Menezes de Morais, eduardo.morais@usp.br
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining
+   * a copy of this software and associated documentation files (the
+   * "Software"), to deal in the Software without restriction, including
+   * without limitation the rights to use, copy, modify, merge, publish,
+   * distribute, sublicense, and/or sell copies of the Software, and to
+   * permit persons to whom the Software is furnished to do so, subject to
+   * the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be
+   * included in all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+   * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+   * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+   * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   * ====================================================================
+   */
+
+/**
+   * @license
+   * jsPDF virtual FileSystem functionality
+   *
+   * Licensed under the MIT License.
+   * http://opensource.org/licenses/mit-license
+   */
+
+/**
+   * @license
+   * Unicode Bidi Engine based on the work of Alex Shensis (@asthensis)
+   * MIT License
+   */

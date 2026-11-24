@@ -1,0 +1,68 @@
+{%- comment -%}
+  목록 카드/행 한 개. 사용법: {% include post-card.html post=post %}
+  썸네일 순서: image → images 의 첫 번째 → 글자 타일(이미지 없을 때)
+{%- endcomment -%}
+{%- assign p = include.post -%}
+{%- include post-data.html post=p -%}
+{%- assign is_pinned = false -%}
+{%- if p.pinned == true or p.pinned == 'true' -%}{%- assign is_pinned = true -%}{%- endif -%}
+{%- assign thumb = p.image -%}
+{%- if thumb == nil or thumb == '' -%}
+  {%- for first_image in p.images limit: 1 -%}
+    {%- if first_image.src -%}
+      {%- assign thumb = first_image.src -%}
+    {%- else -%}
+      {%- assign thumb = first_image -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- include safe-url.html url=thumb kind="media" -%}
+{%- assign thumb_url = safe_url -%}
+<article class="card{% if is_pinned %} card--pinned{% endif %}"
+         data-category="{{ post_category | escape }}">
+  <div class="card__media">
+    {%- if thumb_url != '' %}
+    <img class="card__img" src="{{ thumb_url | escape }}" alt="" loading="lazy" decoding="async">
+    {%- else %}
+    <div class="card__placeholder" aria-hidden="true"><span>{{ post_title | slice: 0, 1 | escape }}</span></div>
+    {%- endif %}
+    {%- if is_pinned %}
+    <span class="badge">대표</span>
+    {%- endif %}
+  </div>
+  <div class="card__body">
+    <p class="card__meta">
+      <span class="card__cat">{{ post_category | escape }}</span>
+      {%- if is_pinned %}<span class="card__pin">대표</span>{%- endif %}
+      <time datetime="{{ post_date_iso | escape }}">{{ post_date_text | escape }}</time>
+      {%- if p.period and p.period != '' %}<span class="card__sep" aria-hidden="true">·</span><span>{{ p.period | escape }}</span>{%- endif %}
+    </p>
+    <h3 class="card__title"><a class="card__link" href="{{ p.url | relative_url }}">{{ post_title | escape }}</a></h3>
+    <p class="card__summary">
+      {%- if p.summary -%}
+        {{- p.summary | escape -}}
+      {%- else -%}
+        {%- assign auto_summary = '' -%}
+        {%- assign paras = p.content | split: '<p>' -%}
+        {%- for para in paras offset: 1 -%}
+          {%- assign para_text = para | split: '</p>' | first | strip_html | strip_newlines | strip -%}
+          {%- if para_text != '' -%}
+            {%- assign auto_summary = para_text -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if auto_summary == '' -%}
+          {%- assign auto_summary = p.excerpt | strip_html | strip_newlines -%}
+        {%- endif -%}
+        {{- auto_summary | truncate: 110 | escape_once -}}
+      {%- endif -%}
+    </p>
+    {%- if p.tags and p.tags.size > 0 %}
+    <ul class="tags card__tags">
+      {%- for tag in p.tags limit: 4 %}
+      <li class="tag">{{ tag | escape }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+  </div>
+</article>

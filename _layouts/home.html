@@ -1,0 +1,16 @@
+---
+layout: default
+---
+{%- comment -%}
+  메인 페이지: 프로필(index.md) + 글 목록(_posts 자동 생성)
+  정렬: 대표글(pinned: true) 먼저, 그 안에서 최신순 → 나머지 최신순
+{%- endcomment -%}
+{%- capture src_prefix %}src="{{ '/assets/' | relative_url }}{% endcapture -%}
+{%- capture href_prefix %}href="{{ '/assets/' | relative_url }}{% endcapture -%}
+{%- capture post_prefix %}href="{{ '/posts/' | relative_url }}{% endcapture -%}
+{%- assign bio = content | replace: 'src="/assets/', src_prefix | replace: 'href="/assets/', href_prefix | replace: 'href="/posts/', post_prefix -%}
+
+{% include profile.html bio=bio %}
+
+{%- assign home_list_title = page.list_title | default: "글 목록" -%}
+{% include post-browser.html title=home_list_title description=page.list_description default_view="card" show_archive_link=true section_id="posts" heading_level="h2" %}

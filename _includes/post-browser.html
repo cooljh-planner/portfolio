@@ -1,0 +1,110 @@
+{%- comment -%}
+  카테고리 탭 + 카드/목록 보기 전환 글 목록 영역.
+  매개변수:
+    title            : 제목 (기본 "글 목록")
+    description      : 부제 설명 (선택)
+    default_view     : "card" | "list" (기본 "card")
+    show_archive_link: true | false (홈에서 /archive/ 바로가기 노출 여부)
+    section_id       : 섹션 id (기본 "posts")
+    heading_level    : "h1" | "h2" (기본 "h2")
+{%- endcomment -%}
+{%- assign pb_title = include.title | default: "글 목록" -%}
+{%- assign pb_view = include.default_view | default: "card" -%}
+{%- assign pb_id = include.section_id | default: "posts" -%}
+{%- assign pb_heading = include.heading_level | default: "h2" -%}
+
+{%- assign cat_bucket = '||' -%}
+{%- for post in site.posts -%}
+  {%- include post-data.html post=post -%}
+  {%- capture cat_token %}||{{ post_category }}||{% endcapture -%}
+  {%- unless cat_bucket contains cat_token -%}
+    {%- assign cat_bucket = cat_bucket | append: post_category | append: '||' -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+{%- assign ordered_bucket = '||' -%}
+{%- for cfg_cat in site.category_order -%}
+  {%- capture cfg_token %}||{{ cfg_cat }}||{% endcapture -%}
+  {%- if cat_bucket contains cfg_token -%}
+    {%- unless ordered_bucket contains cfg_token -%}
+      {%- assign ordered_bucket = ordered_bucket | append: cfg_cat | append: '||' -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign raw_cats = cat_bucket | split: '||' -%}
+{%- for rc in raw_cats -%}
+  {%- if rc != '' -%}
+    {%- capture rc_token %}||{{ rc }}||{% endcapture -%}
+    {%- unless ordered_bucket contains rc_token -%}
+      {%- assign ordered_bucket = ordered_bucket | append: rc | append: '||' -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign ordered_cats = ordered_bucket | split: '||' -%}
+
+<section class="wrap section post-browser"
+         id="{{ pb_id | escape }}"
+         aria-labelledby="{{ pb_id | escape }}-heading"
+         data-post-browser
+         data-default-view="{{ pb_view | escape }}">
+  {%- if pb_id == 'posts' -%}
+  <span id="projects" class="anchor-alias" aria-hidden="true"></span>
+  {%- endif -%}
+
+  <div class="section-head">
+    <div class="section-head__row">
+      <div class="section-head__left">
+        <{{ pb_heading }} class="section-head__title" id="{{ pb_id | escape }}-heading">{{ pb_title | escape }}</{{ pb_heading }}>
+        <span class="section-head__count" data-count-label>{{ site.posts.size }}</span>
+      </div>
+      {%- if include.show_archive_link %}
+      <a class="section-head__more no-print" href="{{ '/archive/' | relative_url }}">전체 글 목록 보기 <span aria-hidden="true">→</span></a>
+      {%- endif %}
+    </div>
+    {%- if include.description and include.description != '' %}
+    <p class="section-head__desc">{{ include.description | escape }}</p>
+    {%- endif %}
+  </div>
+
+  {%- if site.posts.size > 0 %}
+  <div class="post-toolbar no-print js-only">
+    <div class="cat-tabs" role="tablist" aria-label="카테고리 필터">
+      <button type="button" role="tab" class="cat-tab is-active" data-cat="all" aria-selected="true">
+        <span>전체</span><span class="cat-tab__count">{{ site.posts.size }}</span>
+      </button>
+      {%- for cat in ordered_cats -%}
+        {%- if cat != '' -%}
+          {%- assign c_count = 0 -%}
+          {%- for p in site.posts -%}
+            {%- include post-data.html post=p -%}
+            {%- if post_category == cat -%}{%- assign c_count = c_count | plus: 1 -%}{%- endif -%}
+          {%- endfor -%}
+      <button type="button" role="tab" class="cat-tab" data-cat="{{ cat | escape }}" aria-selected="false">
+        <span>{{ cat | escape }}</span><span class="cat-tab__count">{{ c_count }}</span>
+      </button>
+        {%- endif -%}
+      {%- endfor %}
+    </div>
+
+    <div class="view-toggle" role="group" aria-label="보기 방식">
+      <button type="button" class="view-toggle__btn{% if pb_view == 'card' %} is-active{% endif %}" data-view-btn="card" aria-pressed="{% if pb_view == 'card' %}true{% else %}false{% endif %}">카드</button>
+      <button type="button" class="view-toggle__btn{% if pb_view == 'list' %} is-active{% endif %}" data-view-btn="list" aria-pressed="{% if pb_view == 'list' %}true{% else %}false{% endif %}">목록</button>
+    </div>
+  </div>
+
+  <div class="post-collection card-grid" data-collection data-view="{{ pb_view | escape }}">
+    {%- for post in site.posts %}
+      {%- if post.pinned == true or post.pinned == 'true' %}
+        {%- include post-card.html post=post %}
+      {%- endif %}
+    {%- endfor %}
+    {%- for post in site.posts %}
+      {%- unless post.pinned == true or post.pinned == 'true' %}
+        {%- include post-card.html post=post %}
+      {%- endunless %}
+    {%- endfor %}
+  </div>
+  {%- else %}
+  <p class="empty">아직 등록된 글이 없습니다. <code>_posts</code> 폴더에 글을 추가하면 이곳에 자동으로 나타납니다.</p>
+  {%- endif %}
+</section>

@@ -1,0 +1,44 @@
+{%- comment -%}
+  글 한 편의 '표시용 제목·날짜·카테고리·PDF 추출 여부'를 계산합니다. 사용법: {% include post-data.html post=post %}
+  결과 변수: post_title, post_date_text(2026.11.01 형태), post_date_iso, post_title_missing(true/false),
+             post_category(기본 site.default_category 또는 '포스트'), post_pdf(true/false)
+
+  front matter 에 오류가 있으면(예: 제목에 콜론(:) 사용, 탭 들여쓰기, 전각 콜론) Jekyll 은 그 글의
+  title 과 date 를 만들지 못합니다. 그럴 때 빈 제목이 나오지 않도록
+    1) 파일 이름(주소의 마지막 부분)에서 날짜와 제목 글자를 꺼내 쓰고
+    2) 그것도 없으면 "(제목 없음)" 을 표시합니다.
+  목록에서 숨기지 않고 눈에 띄게 남겨 두어 작성자가 오류를 알아차리게 합니다.
+{%- endcomment -%}
+{%- assign pd = include.post -%}
+{%- assign post_title = pd.title | strip -%}
+{%- assign post_title_missing = false -%}
+{%- assign post_date_text = pd.date | date: "%Y.%m.%d" -%}
+{%- assign post_date_iso = pd.date | date_to_xmlschema -%}
+{%- assign post_category = pd.category | default: pd.categories.first | default: site.default_category | default: '포스트' | strip -%}
+{%- if post_category == '' -%}
+  {%- assign post_category = site.default_category | default: '포스트' -%}
+{%- endif -%}
+{%- assign post_pdf = true -%}
+{%- if site.default_pdf == false or site.default_pdf == 'false' -%}
+  {%- assign post_pdf = false -%}
+{%- endif -%}
+{%- if pd.pdf == false or pd.pdf == 'false' -%}
+  {%- assign post_pdf = false -%}
+{%- elsif pd.pdf == true or pd.pdf == 'true' -%}
+  {%- assign post_pdf = true -%}
+{%- endif -%}
+{%- if post_title == '' -%}
+  {%- assign post_title_missing = true -%}
+  {%- assign pd_seg = pd.url | split: '/' | last | url_decode -%}
+  {%- assign pd_rest = pd_seg -%}
+  {%- assign pd_head = pd_seg | slice: 0, 10 | split: '-' -%}
+  {%- if pd_head.size == 3 and pd_head[0].size == 4 and pd_head[1].size == 2 and pd_head[2].size == 2 -%}
+    {%- assign post_date_text = pd_head | join: '.' -%}
+    {%- assign post_date_iso = pd_head | join: '-' -%}
+    {%- assign pd_rest = pd_seg | slice: 11, 300 -%}
+  {%- endif -%}
+  {%- assign post_title = pd_rest | replace: '-', ' ' | replace: '_', ' ' | strip -%}
+  {%- if post_title == '' -%}
+    {%- assign post_title = '(제목 없음)' -%}
+  {%- endif -%}
+{%- endif -%}

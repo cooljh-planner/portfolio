@@ -1,0 +1,11 @@
+{%- comment -%}
+  슬라이드 PDF 추출 대상(pdf != false) 글 수를 계산합니다.
+  결과 변수: pdf_post_count
+{%- endcomment -%}
+{%- assign pdf_post_count = 0 -%}
+{%- for pc_post in site.posts -%}
+  {%- include post-data.html post=pc_post -%}
+  {%- if post_pdf -%}
+    {%- assign pdf_post_count = pdf_post_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}

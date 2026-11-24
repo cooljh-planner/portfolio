@@ -1,0 +1,76 @@
+{%- comment -%}
+  <head> 전체. 외부 요청(CDN, 웹폰트)은 쓰지 않습니다.
+  url 이 있을 때(GitHub Pages 배포)만 절대주소가 필요한 태그(canonical, og:image)를 출력합니다.
+{%- endcomment -%}
+{%- if page.layout == 'home' -%}
+  {%- assign page_title = site.title -%}
+{%- elsif page.layout == 'post' -%}
+  {%- include post-data.html post=page -%}
+  {%- assign page_title = post_title | append: ' · ' | append: site.title -%}
+{%- elsif page.title -%}
+  {%- assign page_title = page.title | append: ' · ' | append: site.title -%}
+{%- else -%}
+  {%- assign page_title = site.title -%}
+{%- endif -%}
+{%- if page.summary -%}
+  {%- assign page_desc = page.summary -%}
+{%- elsif page.layout == 'post' -%}
+  {%- comment -%}
+    summary 가 없으면 본문의 첫 문단(소제목 제외)을 씁니다 — 메인 목록 카드와 같은 방법.
+    (Jekyll 의 excerpt 는 줄바꿈이 CRLF(윈도우 메모장 등)인 글에서 첫 문단에서 끊기지 않고
+     여러 문단·소제목이 이어 붙어 나오므로 쓰지 않습니다.)
+  {%- endcomment -%}
+  {%- assign page_desc = '' -%}
+  {%- assign desc_paras = page.content | split: '<p>' -%}
+  {%- for desc_para in desc_paras offset: 1 -%}
+    {%- assign desc_text = desc_para | split: '</p>' | first | strip_html | normalize_whitespace | strip -%}
+    {%- if desc_text != '' -%}
+      {%- assign page_desc = desc_text -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if page_desc == '' -%}
+    {%- assign page_desc = page.excerpt | strip_html | normalize_whitespace | strip -%}
+  {%- endif -%}
+  {%- assign page_desc = page_desc | truncate: 160 -%}
+{%- else -%}
+  {%- assign page_desc = page.description | default: site.description -%}
+{%- endif -%}
+{%- if page_desc == '' -%}{%- assign page_desc = site.description -%}{%- endif -%}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{{ page_title | escape }}</title>
+  <meta name="description" content="{{ page_desc | escape_once }}">
+  {%- if site.url %}
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  {%- endif %}
+
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:description" content="{{ page_desc | escape_once }}">
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+  <meta property="og:locale" content="ko_KR">
+  {%- if site.url %}
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  {%- endif %}
+  {%- assign og_image = page.image | default: page.avatar -%}
+  {%- assign og_image_emitted = false -%}
+  {%- comment -%} 공유 이미지: http(s):// 주소 또는 사이트 안 경로만 사용 (_includes/safe-url.html) {%- endcomment -%}
+  {%- if og_image %}
+    {%- include safe-url.html url=og_image kind="media" -%}
+    {%- if safe_url_type == 'abs' %}
+  <meta property="og:image" content="{{ safe_url | escape }}">
+      {%- assign og_image_emitted = true -%}
+    {%- elsif safe_url_type == 'rel' and site.url %}
+  <meta property="og:image" content="{{ og_image | strip | absolute_url | escape }}">
+      {%- assign og_image_emitted = true -%}
+    {%- endif %}
+  {%- endif %}
+  <meta name="twitter:card" content="{% if og_image_emitted %}summary_large_image{% else %}summary{% endif %}">
+
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <noscript><style>.js-only { display: none; }</style></noscript>
+</head>
